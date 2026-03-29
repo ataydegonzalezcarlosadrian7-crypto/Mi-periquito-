@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Perico Pro Elite - APK Offline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        :root {
+            --p-green: #15803d;
+            --p-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--p-bg);
+            color: #1e293b;
+            padding-bottom: 100px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-pro {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f1f5f9;
+            transition: transform 0.2s;
+        }
+
+        .card-pro:active { transform: scale(0.97); }
+
+        .nav-btn.active { color: #15803d !important; font-weight: 800; }
+
+        .btn-action {
+            background: linear-gradient(135deg, #15803d 0%, #065f46 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 16px;
+            font-weight: 800;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.2);
+        }
+
+        .badge-safe { background: #dcfce7; color: #166534; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #e0f2fe; color: #075985; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .tab-btn.active {
+            border-bottom: 3px solid #15803d;
+            color: #15803d;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BIENVENIDA -->
+    <div id="welcome" class="page active h-screen flex flex-col items-center justify-between py-12 px-8 bg-white">
+        <div class="mt-10 text-center">
+            <div class="w-32 h-32 bg-green-50 rounded-[40px] flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <i class="fas fa-dove text-5xl text-green-600"></i>
+            </div>
+            <h1 class="text-3xl font-black text-slate-900">Perico Pro <span class="text-green-600">Elite</span></h1>
+            <p class="text-slate-400 text-sm mt-2 font-medium italic">"Tu experto aviar en el bolsillo"</p>
+        </div>
+        
+        <div class="w-full space-y-3">
+            <button onclick="checkFirstRun()" class="btn-action w-full">Entrar al Sistema</button>
+            <p class="text-[10px] text-center text-slate-300 uppercase font-black tracking-widest">v4.0 Full Offline Encyclopedia</p>
+        </div>
+    </div>
+
+    <!-- CONFIGURACIÓN DE PERFIL -->
+    <div id="setup" class="page px-8 pt-12">
+        <h2 class="text-2xl font-black mb-2">Mi Compañero</h2>
+        <p class="text-sm text-slate-500 mb-8">Personaliza tu manual de cuidado.</p>
+        
+        <div class="space-y-4">
+            <input id="petName" type="text" placeholder="Nombre (ej. Paco)" class="w-full bg-white border border-slate-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-green-500">
+            <select id="petSpecies" class="w-full bg-white border border-slate-200 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-green-500">
+                <option value="periquito">Periquito Australiano</option>
+                <option value="ninfa">Ninfa / Carolina</option>
+                <option value="agapornis">Agapornis</option>
+                <option value="amazona">Loro Amazonas</option>
+                <option value="yaco">Loro Gris Africano</option>
+            </select>
+            <button onclick="saveProfile()" class="btn-action w-full mt-6">Guardar Perfil</button>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="home" class="page px-6 pt-6 overflow-y-auto">
+        <header class="flex justify-between items-center mb-6">
+            <div onclick="showPage('setup')">
+                <h2 id="displayPetName" class="text-2xl font-black text-slate-900">Cargando...</h2>
+                <p id="displayPetSpecies" class="text-[10px] font-black text-green-600 uppercase tracking-widest">Especie</p>
+            </div>
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-700">
+                <i class="fas fa-certificate"></i>
+            </div>
+        </header>
+
+        <!-- SECCIONES PRINCIPALES -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div onclick="showCategory('food')" class="card-pro flex flex-col items-center py-5">
+                <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-3">
+                    <i class="fas fa-carrot text-xl"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase">Alimentación</span>
+            </div>
+            <div onclick="showCategory('badfood')" class="card-pro flex flex-col items-center py-5">
+                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-3">
+                    <i class="fas fa-skull text-xl"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase">Prohibidos</span>
+            </div>
+            <div onclick="showCategory('games')" class="card-pro flex flex-col items-center py-5">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-3">
+                    <i class="fas fa-gamepad text-xl"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase">Entrenamiento</span>
+            </div>
+            <div onclick="showCategory('trivia')" class="card-pro flex flex-col items-center py-5">
+                <div class="w-12 h-12 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center mb-3">
+                    <i class="fas fa-lightbulb text-xl"></i>
+                </div>
+                <span class="text-[10px] font-black uppercase">Curiosidades</span>
+            </div>
+        </div>
+
+        <!-- DIETA RECOMENDADA RÁPIDA -->
+        <div class="card-pro mb-6 bg-slate-900 text-white">
+            <h4 class="font-bold text-sm mb-3 border-b border-slate-700 pb-2 flex justify-between">
+                Menú Recomendado <i class="fas fa-calendar-day text-green-400"></i>
+            </h4>
+            <div class="space-y-2">
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-400">Mañana:</span>
+                    <span class="font-bold">Chop de brócoli y pera</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-400">Tarde:</span>
+                    <span class="font-bold">Mix de semillas controladas</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-slate-400">Snack:</span>
+                    <span class="font-bold text-green-400">Trocito de nuez</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SABÍAS QUE (CARRUSEL AUTOMÁTICO SIMULADO) -->
+        <div class="bg-indigo-50 p-5 rounded-3xl border border-indigo-100 mb-10">
+            <p class="text-[9px] font-black text-indigo-400 uppercase mb-1">Sabías que...</p>
+            <p id="triviaText" class="text-sm text-indigo-900 font-bold leading-relaxed">"Los periquitos tienen el sentido del oído tan desarrollado que pueden distinguir melodías complejas."</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA DE CONTENIDO -->
+    <div id="content" class="page px-6 pt-6 pb-24 overflow-y-auto h-full">
+        <div class="flex items-center justify-between mb-6">
+            <button onclick="showPage('home')" class="p-2 bg-white rounded-xl shadow-sm"><i class="fas fa-chevron-left"></i></button>
+            <h2 id="categoryTitle" class="text-sm font-black uppercase text-slate-400">Sección</h2>
+            <div class="w-8"></div>
+        </div>
+        <div id="categoryRender" class="space-y-4"></div>
+    </div>
+
+    <!-- DIARIO -->
+    <div id="journal" class="page px-6 pt-6 pb-24 h-full flex flex-col">
+        <h2 class="text-2xl font-black mb-1">Bitácora</h2>
+        <p class="text-xs text-slate-400 mb-6 font-bold uppercase tracking-widest">Control de Salud</p>
+        
+        <div class="card-pro mb-6 shrink-0 border-2 border-green-100">
+            <textarea id="logInput" placeholder="Anota el peso, comportamiento o nuevas palabras..." class="w-full border-none rounded-xl p-2 text-sm focus:ring-0 mb-3" rows="3"></textarea>
+            <button onclick="addLog()" class="btn-action w-full text-sm py-3">Registrar Hoy</button>
+        </div>
+
+        <div id="logList" class="space-y-4 overflow-y-auto no-scrollbar"></div>
+    </div>
+
+    <!-- NAV BAR -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 flex justify-around items-center py-4 z-50">
+        <button onclick="showPage('home')" class="nav-btn flex flex-col items-center gap-1 active">
+            <i class="fas fa-grip-vertical text-xl"></i>
+            <span class="text-[8px] font-black uppercase">Inicio</span>
+        </button>
+        <button onclick="showPage('journal')" class="nav-btn flex flex-col items-center gap-1 text-slate-300">
+            <i class="fas fa-notes-medical text-xl"></i>
+            <span class="text-[8px] font-black uppercase">Diario</span>
+        </button>
+        <button onclick="showCategory('health')" class="nav-btn flex flex-col items-center gap-1 text-slate-300">
+            <i class="fas fa-stethoscope text-xl"></i>
+            <span class="text-[8px] font-black uppercase">Salud</span>
+        </button>
+    </nav>
+
+    <script>
+        const contentDB = {
+            food: {
+                title: "Alimentos Recomendados",
+                items: [
+                    { t: "Brócoli (El Rey)", d: "Fuente máxima de calcio y vitamina A. Se puede dar crudo o al vapor.", i: "fa-leaf", b: "badge-safe" },
+                    { t: "Zanahoria", d: "Rica en betacarotenos. Ayuda a mantener el color de las plumas brillante.", i: "fa-carrot", b: "badge-safe" },
+                    { t: "Pimiento Rojo", d: "Aporta muchísima vitamina C. No les pica porque no tienen receptores de capsaicina.", i: "fa-pepper-hot", b: "badge-safe" },
+                    { t: "Espina de Jibia", d: "Fundamental para el aporte de calcio y el desgaste natural del pico.", i: "fa-fish", b: "badge-safe" },
+                    { t: "Manzana (Sin Semillas)", d: "Aporta hidratación y fibra. Es su golosina natural favorita.", i: "fa-apple-whole", b: "badge-safe" }
+                ]
+            },
+            badfood: {
+                title: "Venenos Prohibidos",
+                items: [
+                    { t: "Aguacate (Mortal)", d: "Contiene Persina, una sustancia que causa fallo cardíaco fulminante en aves.", i: "fa-skull", b: "badge-danger" },
+                    { t: "Chocolate y Café", d: "La teobromina y cafeína aceleran su metabolismo hasta causar la muerte.", i: "fa-mug-hot", b: "badge-danger" },
+                    { t: "Ajo y Cebolla", d: "Destruyen sus glóbulos rojos, causando una anemia severa y debilidad extrema.", i: "fa-burst", b: "badge-danger" },
+                    { t: "Sal y Azúcar", d: "Sus riñones son diminutos y no pueden procesar estos cristales. Producen deshidratación.", i: "fa-ban", b: "badge-danger" },
+                    { t: "Semillas de Fruta", d: "Las de manzana, pera o cereza contienen cianuro en dosis pequeñas pero letales.", i: "fa-virus", b: "badge-danger" }
+                ]
+            },
+            games: {
+                title: "Juegos y Entrenamiento",
+                items: [
+                    { t: "El Juego de la Cuchara", d: "Dale una cuchara de plástico para que la tire y tú la recoges. Enseña interacción.", i: "fa-spoon" },
+                    { t: "Búsqueda del Tesoro", d: "Esconde semillas en papel arrugado. Estimula su instinto natural de forrajeo.", i: "fa-magnifying-glass" },
+                    { t: "Giro en el Palo", d: "Usa un 'clicker' y un premio para que dé una vuelta sobre sí mismo. Ejercicio mental.", i: "fa-rotate" },
+                    { t: "Cesta de Juguetes", d: "Enséñale a meter piezas pequeñas en un envase a cambio de un premio. Mejora su motricidad.", i: "fa-basket-shopping" }
+                ]
+            },
+            trivia: {
+                title: "Sabías que...",
+                items: [
+                    { t: "Ojos Independientes", d: "Pueden mover sus ojos de forma independiente, viendo dos cosas distintas a la vez.", i: "fa-eye" },
+                    { t: "Huesos Huecos", d: "Sus huesos son neumáticos (llenos de aire), lo que les permite ser increíblemente ligeros.", i: "fa-cloud" },
+                    { t: "Inteligencia de Niño", d: "Un loro puede tener la inteligencia emocional y lógica de un niño de 3 a 5 años.", i: "fa-brain" },
+                    { t: "Ritmo Musical", d: "Son los únicos animales (junto a humanos) que pueden seguir el ritmo de la música espontáneamente.", i: "fa-music" }
+                ]
+            },
+            health: {
+                title: "Salud y Primeros Auxilios",
+                items: [
+                    { t: "Heces Sanas", d: "Deben tener parte sólida verde, parte blanca (uratos) y algo de líquido claro.", i: "fa-droplet" },
+                    { t: "Pico y Uñas", d: "Si crecen demasiado, indican mala dieta o falta de elementos para desgastar.", i: "fa-scissors" },
+                    { t: "Limpieza del Aire", d: "Cuidado con teflón de sartenes, inciensos o perfumes; son tóxicos para sus pulmones.", i: "fa-wind" }
+                ]
+            }
+        };
+
+        const trivias = [
+            "Los periquitos duermen apoyados en una sola pata para conservar el calor corporal.",
+            "Tu perico puede ver la luz ultravioleta, lo que le permite ver colores que nosotros ni imaginamos.",
+            "Un loro estresado puede llegar a arrancarse las plumas por frustración o soledad.",
+            "La lengua de los loros es casi tan sensible como la punta de nuestros dedos.",
+            "El bostezo en los periquitos también puede ser contagioso como en los humanos."
+        ];
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'text-green-700'));
+            const navMap = { home: 0, journal: 1, setup: 0 };
+            if(navMap[id] !== undefined) {
+                document.querySelectorAll('.nav-btn')[navMap[id]].classList.add('active');
+            }
+
+            if(id === 'home') {
+                document.getElementById('triviaText').innerText = trivias[Math.floor(Math.random() * trivias.length)];
+            }
+        }
+
+        function showCategory(key) {
+            const data = contentDB[key];
+            const render = document.getElementById('categoryRender');
+            document.getElementById('categoryTitle').innerText = data.title;
+            
+            render.innerHTML = data.items.map(item => `
+                <div class="card-pro flex gap-4 animate-fadeIn border-l-4 ${item.b === 'badge-danger' ? 'border-red-500' : (item.b === 'badge-safe' ? 'border-green-500' : 'border-blue-500')}">
+                    <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-500 shrink-0">
+                        <i class="fas ${item.i}"></i>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-black text-slate-800 text-sm leading-tight">${item.t}</h4>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed mt-1">${item.d}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            showPage('content');
+        }
+
+        function checkFirstRun() {
+            const profile = localStorage.getItem('parrot_profile_v4');
+            if(profile) {
+                loadProfile();
+                showPage('home');
+            } else {
+                showPage('setup');
+            }
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('petName').value;
+            const species = document.getElementById('petSpecies').value;
+            if(!name) return;
+
+            localStorage.setItem('parrot_profile_v4', JSON.stringify({ name, species }));
+            loadProfile();
+            showPage('home');
+        }
+
+        function loadProfile() {
+            const profile = JSON.parse(localStorage.getItem('parrot_profile_v4'));
+            document.getElementById('displayPetName').innerText = profile.name;
+            document.getElementById('displayPetSpecies').innerText = profile.species;
+        }
+
+        function addLog() {
+            const val = document.getElementById('logInput').value;
+            if(!val) return;
+
+            const logs = JSON.parse(localStorage.getItem('parrot_logs_v4') || '[]');
+            logs.unshift({ id: Date.now(), text: val, date: new Date().toLocaleDateString('es-ES', {day:'2-digit', month:'short'}) });
+            localStorage.setItem('parrot_logs_v4', JSON.stringify(logs));
+            document.getElementById('logInput').value = '';
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const logs = JSON.parse(localStorage.getItem('parrot_logs_v4') || '[]');
+            const list = document.getElementById('logList');
+            list.innerHTML = logs.map(l => `
+                <div class="card-pro bg-white">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[9px] font-black bg-green-100 text-green-700 px-2 py-0.5 rounded-full uppercase">${l.date}</span>
+                    </div>
+                    <p class="text-sm font-medium text-slate-600">${l.text}</p>
+                </div>
+            `).join('') || '<p class="text-center text-slate-300 py-10 font-bold uppercase text-[10px]">Aún no hay registros en la bitácora</p>';
+        }
+
+        window.onload = () => {
+            renderLogs();
+            if(localStorage.getItem('parrot_profile_v4')) loadProfile();
+        };
+    </script>
+</body>
+</html>
+
